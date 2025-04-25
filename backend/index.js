@@ -14,3 +14,10 @@ pool.query('SELECT NOW()', (err, res) => {
 app.listen(5000, () => {
   console.log('🚀 Server running on port 5000');
 });
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error executing query', err.stack);
+  } else {
+    console.log('Database connected at:', res.rows[0].now);
+  }
+});
