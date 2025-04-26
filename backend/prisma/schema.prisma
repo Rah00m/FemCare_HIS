@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define enums
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+// Define models
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+}
+
+
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  fileUrl     String?  
+  createdAt   DateTime @default(now())
+  doctorId    Int
+  patientId   Int
+
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  patient     Patient  @relation(fields: [patientId], references: [id])
+}
+
+model MedicalHistory {
+  id          Int      @id @default(autoincrement())
+  diagnosis   String
+  treatment   String
+  dose        String
+  notes       String?
+  date        DateTime @default(now())
+  patientId   Int
+
+  patient     Patient  @relation(fields: [patientId], references: [id])
+}
+
+model Doctor {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password      String
+  phone         String
+  reports       Report[]
+  appointments   Appointment[]   
+  prescriptions  Prescription[] 
+}
+
+model Patient {
+  id                Int      @id @default(autoincrement())
+  name              String
+  email             String   @unique
+  password          String
+  age                Int
+  phone              String
+  medicalHistories  MedicalHistory[]
+  reports           Report[]
+  appointments      Appointment[]   
+  prescriptions     Prescription[]  
+}
+
+model Appointment {
+  id          Int              @id @default(autoincrement())
+  date        DateTime
+  status      AppointmentStatus
+  doctorId    Int
+  patientId   Int
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  patient     Patient  @relation(fields: [patientId], references: [id])
+}
+
+model Prescription {
+  id          Int              @id @default(autoincrement())
+  medication  String
+  dosage      String
+  frequency   Frequency
+  date        DateTime @default(now())
+  doctorId    Int
+  patientId   Int
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  patient     Patient  @relation(fields: [patientId], references: [id])
+}
