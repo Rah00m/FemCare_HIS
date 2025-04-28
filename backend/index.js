@@ -5,6 +5,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const adminRoutes = require('./routes/adminRoutes'); 
 const loginRoutes = require('./routes/loginRoute'); 
+const signup = require('./routes/signupRoutes')
 dotenv.config();
 
 if (!process.env.DATABASE_URL) {
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/api/admin', adminRoutes);  
 app.use('/api/login', loginRoutes);  
+app.use('/api/signup',signup);
 
 app.listen(process.env.PORT || 5000, async () => {
   try {

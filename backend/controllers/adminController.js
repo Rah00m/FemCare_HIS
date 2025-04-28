@@ -1,3 +1,4 @@
+  // admin controller
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -5,6 +6,9 @@ const prisma = new PrismaClient();
 const addDoctor = async (req, res) => {
   const { name, email, password, phone } = req.body;
   try {
+    if (!email.endsWith('@doctor.com')) {
+      return res.status(400).json({ message: 'Please,Write a valid email' });
+    }
     const existingDoctor = await prisma.doctor.findUnique({ where: { email } });
     if (existingDoctor) {
       return res.status(400).json({ message: 'Doctor with this email already exists!' });
@@ -41,10 +45,31 @@ const deleteDoctor = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete doctor', error: error.message });
   }
 };
+// Update Doctor
+const updateDoctor = async (req, res) => {
+  const { doctorId } = req.params;
+  const { name, email, password, phone } = req.body;
 
+  try {
+    const doctor = await prisma.doctor.findUnique({ where: { id: parseInt(doctorId) } });
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const updatedDoctor = await prisma.doctor.update({
+      where: { id: parseInt(doctorId) },
+      data: { name, email, password, phone },
+    });
+
+    res.status(200).json({ message: 'Doctor updated successfully!', updatedDoctor });
+  } catch (error) {
+    console.error('Error updating doctor:', error);
+    res.status(500).json({ message: 'Failed to update doctor', error: error.message });
+  }
+};
 // Add Patient
 const addPatient = async (req, res) => {
-  const { name, email, password, age } = req.body;
+  const { name, email, password, age, phone } = req.body;
 
   try {
     const existingPatient = await prisma.patient.findUnique({ where: { email } });
@@ -58,6 +83,7 @@ const addPatient = async (req, res) => {
         email,
         password,
         age,
+        phone,
       },
     });
 
@@ -123,13 +149,14 @@ const addAdmin = async (req, res) => {
     res.status(201).json({ message: 'Admin added successfully!', admin });
   } catch (error) {
     console.error('Error adding admin:', error);
-    res.status(500).json({ message: 'Failed to add admin', error });
+    res.status(500).json({ message: 'Failed to add admin', error: error.message });
   }
 };
 
 module.exports = {
   addDoctor,
   deleteDoctor,
+  updateDoctor,
   addPatient,
   deletePatient,
   deleteAdmin,
