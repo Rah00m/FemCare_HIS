@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import './App.css';
 import babyLogo from './imgg.png';
@@ -311,10 +312,23 @@ const App = () => {
           </div>
         </div>
       )}
+=======
+// import logo from './logo.svg';
+import './App.css';
+import React from 'react';
+import LoginSignup from './components/LoginSignup';
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <LoginSignup />
+      </header>
+>>>>>>> 749f074ed2fba0b3d0a124c32cbb0a1173087d03
     </div>
   );
 };
 
+<<<<<<< HEAD
 const PatientProfile = ({ patientData, onLogout }) => {
   const [activeSection, setActiveSection] = useState('basic-info');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -554,3 +568,7 @@ const InfoRow = ({ label, value, isEmergency = false }) => (
 );
 
 export default App;
+=======
+
+export default App;
+>>>>>>> 749f074ed2fba0b3d0a124c32cbb0a1173087d03
