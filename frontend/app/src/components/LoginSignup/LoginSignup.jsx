@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LoginSignup.css';
-import babyLogo from './img.png';
+import babyLogo from './imgg.png';
+import PatientProfile from '../PatientProfile/PatientProfile';
 
 const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +11,8 @@ const LoginSignup = () => {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [patientData, setPatientData] = useState(null);
 
   const doctors = [
     {
@@ -26,21 +29,85 @@ const LoginSignup = () => {
     },
     {
       id: 3,
-      name: "Dr. Sarah Johnson",
+      name: "Dr. Sarah William",
       specialty: "Maternal-Fetal Medicine",
       photo: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
     }
   ];
 
+  // Sample patient data that would be fetched after login
+  const getPatientData = (email) => {
+    // In a real app, this would come from an API
+    return {
+      name: name || "Sarah Johnson",
+      id: "P130412",
+      dob: dob || "1990-05-15",
+      referredBy: "Dr. Smith",
+      family: {
+        parent: "Mary Johnson",
+        spouse: "Michael Johnson",
+        children: ["Emma (2018)", "Liam (2020)"]
+      },
+      contact: {
+        primaryMobile: phone || "+1234567890",
+        secondaryMobile: "+1987654321",
+        landline: "+18005551234",
+        email: email,
+        address: "123 Medical Center Dr, Suite 456, Boston, MA 02115",
+        emergencyContact: "Michael Johnson (+1987654321)"
+      },
+      medicalHistory: {
+        allergies: ["Penicillin", "Latex", "Shellfish"],
+        surgeries: ["C-section (2018)", "Appendectomy (2005)"],
+        conditions: ["Gestational hypertension", "Anemia"],
+        medications: ["Prenatal vitamins", "Iron supplements", "Folic acid"],
+        immunizations: ["Flu vaccine (2022)", "TDAP (2022)"]
+      },
+      pregnancyInfo: {
+        lmp: "01-Jan-2023",
+        edd: "08-Oct-2023",
+        currentWeek: 32,
+        ultrasoundDates: ["12-Feb-2023", "15-May-2023"],
+        complications: ["Mild anemia", "Borderline glucose levels"]
+      },
+      obstetricHistory: {
+        gravida: 2,
+        para: 1,
+        abortions: 0,
+        living_children: 1
+      },
+      basicInfo: {
+        rh_factor: "Positive",
+        blood_type: "A+",
+        current_medications: ["Prenatal vitamins", "Iron supplements", "Folic acid"],
+        known_allergies: ["Penicillin", "Latex", "Shellfish"],
+        full_name: name || "Sarah Johnson",
+        email: email,
+        phone_number: phone || "+1234567890"
+      },
+      profilePhoto: null
+    };
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
+      // In a real app, you would verify credentials with a backend
       alert(`Logging in with ${email}`);
     } else {
-      alert(`Signing up as ${name}\nPhone: ${phone}\nDOB: ${dob}`);
+      alert(`Signing up as ${name || email}\nPhone: ${phone}\nDOB: ${dob}`);
     }
+    
+    // Set patient data and log in
+    const data = getPatientData(email);
+    setPatientData(data);
+    setIsLoggedIn(true);
     setShowAuthForms(false);
   };
+
+  if (isLoggedIn && patientData) {
+    return <PatientProfile patientData={patientData} />;
+  }
 
   return (
     <div className="app-container">
