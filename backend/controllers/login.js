@@ -2,7 +2,6 @@ const jwt=require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-
 exports.login =async (req,res)=>{
     const {email,password}=req.body;
         if (!email || !password) {

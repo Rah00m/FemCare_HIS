@@ -64,8 +64,7 @@ model Doctor {
   email         String   @unique
   password      String
   phone         String
-  dob DateTime
-
+  dob           DateTime?
   reports       Report[]
   appointments   Appointment[]   
   prescriptions  Prescription[] 

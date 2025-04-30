@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import babyLogo from '../images/imgg.png';
-
+import axios from 'axios';
 const Home = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showAuthForms, setShowAuthForms] = useState(false);
@@ -58,18 +58,76 @@ const Home = () => {
     }
   ];
 
-  const handleSubmit = (e) => {
+  // const handleSubmit =async (e) => {
+  //   e.preventDefault();
+  //   try{
+  //     const response = await axios.post('http://localhost:5000/api/login', {
+  //       email,
+  //       password,
+  //     });
+  //     const { token,role } = response.data;
+  //     localStorage.setItem('token', token);
+  //     if (role === 'patient') {
+  //       navigate('/patient-profile');
+  //     } else {
+  //       // إضافة المنطق للـ doctor أو الـ admin إذا كان ذلك مطلوبًا
+  //     }
+  //   }catch (error) {
+  //     console.error("Error logging in:", error);
+  //     alert("Login failed. Please try again.");
+  //   }
+  //   };
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      alert(`Logging in with ${email}`);
-      navigate('/patient-profile');
-    } else {
-      alert(`Signing up as ${name}\nPhone: ${phone}\nDOB: ${dob}`);
-      navigate('/patient-profile');
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', {
+        email,
+        password,
+      });
+      const { token, role } = response.data;
+      console.log("Token:", token);
+      localStorage.setItem('token', token);  // حفظ التوكن في الlocalStorage
+      if (role === 'patient') {
+        navigate('/patient-profile');  // التوجيه إلى صفحة الملف الشخصي للمريض
+      }else if (role === 'doctor') {
+        navigate('/doctor-profile');  // التوجيه إلى صفحة الملف الشخصي للطبيب
+      } 
+      else {
+        // إضافة المنطق للـ doctor أو الـ admin إذا كان ذلك مطلوبًا
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      alert("Login failed. Please try again.");
     }
-    setShowAuthForms(false);
   };
-
+  
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/signup', {
+        name,
+        email,
+        phone,
+        dob,
+        password,
+      });
+      const { token, role } = response.data;
+      console.log("Token:", token);
+      localStorage.setItem('token', token);  // حفظ التوكن في الlocalStorage
+      if (role === 'patient') {
+        navigate('/patient-profile');  
+        navigate('/doctor-profile');       
+      } 
+      else {
+        // إضافة المنطق للـ doctor أو الـ admin إذا كان ذلك مطلوبًا
+      }
+    } catch (error) {
+      console.error("Error signing up:", error);
+      alert("Sign Up failed. Please try again.");
+    }
+  };
+  
+  // View doctor profile
   const handleViewProfile = (doctorId) => {
     navigate(`/doctor/${doctorId}`);
   };
@@ -171,7 +229,7 @@ const Home = () => {
             <div className="pink-login-box">
               {isLogin ? (
                 // LOGIN FORM
-                <form onSubmit={handleSubmit} className="pink-form">
+                <form onSubmit={handleLogin} className="pink-form">
                   <h2>Welcome Back!</h2>
                   <p>To keep connected with us please login with your personal info</p>
                   
@@ -202,7 +260,7 @@ const Home = () => {
                 </form>
               ) : (
                 // SIGNUP FORM
-                <form onSubmit={handleSubmit} className="pink-form">
+                <form onSubmit={handleSignUp} className="pink-form">
                   <h2>Create Account</h2>
                   
                   <div className="pink-social-login">

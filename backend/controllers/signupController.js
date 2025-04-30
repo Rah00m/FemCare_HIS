@@ -2,8 +2,11 @@ const { generateToken } = require('../utils/authUtils')
 const{PrismaClient}=require('@prisma/client');
 const prisma=new PrismaClient();
 function  calcAge(dob){
-    const birthDate=new Date(dob);
-    const today=new Date();
+    const birthDate = new Date(dob);
+    if (isNaN(birthDate.getTime())) { // إذا كان التاريخ غير صالح
+        return res.status(400).json({ message: 'Invalid date format for dob. Please provide a valid date in YYYY-MM-DD format.' });
+    }
+       const today=new Date();
     let age=today.getFullYear()-birthDate.getFullYear();
     const monthDiff=today.getMonth()-birthDate.getMonth();
     if(monthDiff<0 || (monthDiff===0 && today.getDate()<birthDate.getDate())){
@@ -13,10 +16,19 @@ function  calcAge(dob){
 }
 const signup= async (req,res)=>{
     const {name,email,password,phone,dob}=req.body;
+    if (!dob) {
+        return res.status(400).json({ message: 'Date of birth (dob) is required!' });
+      }
     try{
         let user;
         let userId;
         let role='';
+        const parsedDob = new Date(dob);
+        if (isNaN(parsedDob.getTime())) {
+            return res.status(400).json({ message: 'Invalid date format for dob. Please provide a valid date in YYYY-MM-DD format.' });
+        }
+        const age = calcAge(parsedDob);
+
         if(email.endsWith('@doctor.com')){
             user = await prisma.Doctor.findUnique({
                 where: {email}
@@ -31,12 +43,11 @@ const signup= async (req,res)=>{
                     email,
                     password,
                     phone,
-                    dob,
+                    dob: parsedDob,
                 },
             });
             userId = user.id;
             role = 'doctor';
-            return res.status(201).json({ message: 'Doctor signed up successfully!', user });
         }else if(email.endsWith('@admin.com')){
             user= await prisma.Admin.findUnique({ where: { email } });
             if (user) {
@@ -48,23 +59,20 @@ const signup= async (req,res)=>{
     });
             role = 'admin';
             userId = user.id;
-    return res.status(201).json({ message: 'Admin signed up successfully!', user });
     } else {
       // Otherwise, create a patient
         user = await prisma.Patient.findUnique({ where: { email } });
     if (user) {
         return res.status(400).json({ message: 'Patient with this email already exists!' });
-    }
+    }      
+    // const age = calcAge(user.dob);
     user = await prisma.Patient.create({
-        data: { name, email, password, phone, dob },
+        data: { name, email, password, phone, dob: parsedDob },
       });
       role = 'patient';
     userId = user.id;
-      return res.status(201).json({ message: 'Patient signed up successfully!', user,age });
-    
-        }
-    // Calculate age from date of birth
-    const age = calcAge(user.dob);
+    }
+
     // Generate JWT token
     const token = generateToken(userId, role);
 
@@ -73,6 +81,7 @@ const signup= async (req,res)=>{
       token,
       role,
       user,
+        age, 
     });
 
   } catch (error) {
