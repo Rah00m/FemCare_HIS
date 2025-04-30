@@ -1,61 +1,75 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Home.css';
-import babyLogo from '../images/imgg.png';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Home.css";
+import babyLogo from "../images/imgg.png";
+import axios from "axios";
 const Home = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showAuthForms, setShowAuthForms] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [dob, setDob] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dob, setDob] = useState("");
   const navigate = useNavigate();
+  const [nationalId, setNationalId] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const doctors = [
     {
       id: 1,
       name: "Dr. Emily Wilson",
       specialty: "Obstetrician",
-      photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      photo:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
       bio: "Board-certified obstetrician with 15 years of experience specializing in high-risk pregnancies.",
-      education: ["MD - Harvard Medical School", "Residency - Massachusetts General Hospital"],
+      education: [
+        "MD - Harvard Medical School",
+        "Residency - Massachusetts General Hospital",
+      ],
       schedule: {
         monday: "9:00 AM - 5:00 PM",
         tuesday: "9:00 AM - 5:00 PM",
         wednesday: "10:00 AM - 6:00 PM",
         thursday: "9:00 AM - 5:00 PM",
-        friday: "8:00 AM - 12:00 PM"
-      }
+        friday: "8:00 AM - 12:00 PM",
+      },
     },
     {
       id: 2,
       name: "Dr. Michael Chen",
       specialty: "Gynecologist",
-      photo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      photo:
+        "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
       bio: "Specializes in minimally invasive gynecologic surgery and reproductive health.",
-      education: ["MD - Johns Hopkins University", "Fellowship in Gynecologic Oncology"],
+      education: [
+        "MD - Johns Hopkins University",
+        "Fellowship in Gynecologic Oncology",
+      ],
       schedule: {
         monday: "8:00 AM - 4:00 PM",
         tuesday: "8:00 AM - 4:00 PM",
         wednesday: "9:00 AM - 5:00 PM",
-        friday: "8:00 AM - 12:00 PM"
-      }
+        friday: "8:00 AM - 12:00 PM",
+      },
     },
     {
       id: 3,
       name: "Dr. Sarah William",
       specialty: "Maternal-Fetal Medicine",
-      photo: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      photo:
+        "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
       bio: "Expert in managing high-risk pregnancies and fetal complications.",
-      education: ["MD - Stanford University", "Fellowship in Maternal-Fetal Medicine"],
+      education: [
+        "MD - Stanford University",
+        "Fellowship in Maternal-Fetal Medicine",
+      ],
       schedule: {
         monday: "10:00 AM - 6:00 PM",
         tuesday: "10:00 AM - 6:00 PM",
-        thursday: "8:00 AM - 4:00 PM"
-      }
-    }
+        thursday: "8:00 AM - 4:00 PM",
+      },
+    },
   ];
 
   // const handleSubmit =async (e) => {
@@ -80,19 +94,18 @@ const Home = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post("http://localhost:5000/api/login", {
         email,
         password,
       });
       const { token, role } = response.data;
       console.log("Token:", token);
-      localStorage.setItem('token', token);  // حفظ التوكن في الlocalStorage
-      if (role === 'patient') {
-        navigate('/patient-profile');  // التوجيه إلى صفحة الملف الشخصي للمريض
-      }else if (role === 'doctor') {
-        navigate('/doctor-profile');  // التوجيه إلى صفحة الملف الشخصي للطبيب
-      } 
-      else {
+      localStorage.setItem("token", token); // حفظ التوكن في الlocalStorage
+      if (role === "patient") {
+        navigate("/patient-profile"); // التوجيه إلى صفحة الملف الشخصي للمريض
+      } else if (role === "doctor") {
+        navigate("/doctor-profile"); // التوجيه إلى صفحة الملف الشخصي للطبيب
+      } else {
         // إضافة المنطق للـ doctor أو الـ admin إذا كان ذلك مطلوبًا
       }
     } catch (error) {
@@ -100,33 +113,51 @@ const Home = () => {
       alert("Login failed. Please try again.");
     }
   };
-  
+
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (!profilePhoto) {
+      alert("Please upload a profile photo.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("dob", dob);
+    formData.append("password", password);
+    formData.append("nationalId", nationalId);
+    formData.append("profilePhoto", profilePhoto);
+    console.log("Profile Photo:", profilePhoto); // تحقق إذا كانت الصورة موجودة أم لا
+    console.log("Form data being sent:", formData);
+
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', {
-        name,
-        email,
-        phone,
-        dob,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/signup",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       const { token, role } = response.data;
       console.log("Token:", token);
-      localStorage.setItem('token', token);  // حفظ التوكن في الlocalStorage
-      if (role === 'patient') {
-        navigate('/patient-profile');  
-        navigate('/doctor-profile');       
-      } 
-      else {
-        // إضافة المنطق للـ doctor أو الـ admin إذا كان ذلك مطلوبًا
+      localStorage.setItem("token", token); // حفظ التوكن في الlocalStorage
+      if (role === "patient") {
+        navigate("/patient-profile");
+      } else if (role === "doctor") {
+        navigate("/doctor-profile");
+      } else {
+        // التعامل مع باقي الأدوار إذا لزم الأمر
       }
+      
     } catch (error) {
       console.error("Error signing up:", error);
       alert("Sign Up failed. Please try again.");
     }
   };
-  
+
   // View doctor profile
   const handleViewProfile = (doctorId) => {
     navigate(`/doctor/${doctorId}`);
@@ -138,27 +169,35 @@ const Home = () => {
       <nav className="top-nav">
         <div className="nav-left">
           <div className="logo">
-            <img 
-              src={babyLogo} 
-              alt="Baby Logo" 
-              className="logo-image"
-            />
+            <img src={babyLogo} alt="Baby Logo" className="logo-image" />
             <span className="logo-text">Obstetrics and Gynecology</span>
           </div>
           <div className="nav-links">
-            <a href="#office" className="nav-link">Locations</a>
-            <a href="#services" className="nav-link">Services</a>
-            <a href="#specialties" className="nav-link">Find an obstetrician</a>
-            <a href="#pricing" className="nav-link">Appointments</a>
-            <a href="#about" className="nav-link">About Us</a>
-            <a href="#contact" className="nav-link">Contact Us</a>
+            <a href="#office" className="nav-link">
+              Locations
+            </a>
+            <a href="#services" className="nav-link">
+              Services
+            </a>
+            <a href="#specialties" className="nav-link">
+              Find an obstetrician
+            </a>
+            <a href="#pricing" className="nav-link">
+              Appointments
+            </a>
+            <a href="#about" className="nav-link">
+              About Us
+            </a>
+            <a href="#contact" className="nav-link">
+              Contact Us
+            </a>
           </div>
         </div>
         <div className="nav-right">
           <button className="nav-button">
             <span>Home</span>
           </button>
-          <button 
+          <button
             className="nav-button login-btn"
             onClick={() => setShowAuthForms(!showAuthForms)}
           >
@@ -179,15 +218,19 @@ const Home = () => {
       <div className="doctors-container">
         <h2 className="doctors-title">Our Specialists</h2>
         <div className="doctors-grid">
-          {doctors.map(doctor => (
+          {doctors.map((doctor) => (
             <div key={doctor.id} className="doctor-card">
               <div className="doctor-photo-container">
-                <img src={doctor.photo} alt={doctor.name} className="doctor-photo" />
+                <img
+                  src={doctor.photo}
+                  alt={doctor.name}
+                  className="doctor-photo"
+                />
               </div>
               <div className="doctor-info">
                 <h3>{doctor.name}</h3>
                 <p>{doctor.specialty}</p>
-                <button 
+                <button
                   className="view-profile-btn"
                   onClick={() => handleViewProfile(doctor.id)}
                 >
@@ -203,24 +246,24 @@ const Home = () => {
       {showAuthForms && (
         <div className="auth-forms-overlay">
           <div className="auth-forms-container">
-            <button 
+            <button
               className="close-auth-btn"
               onClick={() => setShowAuthForms(false)}
             >
               ×
             </button>
-            
+
             {/* Login/Register Tabs */}
             <div className="auth-tabs">
-              <button 
-                className={`auth-tab ${isLogin ? 'active' : ''}`}
-              onClick={() => setIsLogin(true)}
+              <button
+                className={`auth-tab ${isLogin ? "active" : ""}`}
+                onClick={() => setIsLogin(true)}
               >
                 Login
               </button>
-              <button 
-                  className={`auth-tab ${!isLogin ? 'active' : ''}`}
-                  onClick={() => setIsLogin(false)}
+              <button
+                className={`auth-tab ${!isLogin ? "active" : ""}`}
+                onClick={() => setIsLogin(false)}
               >
                 Register
               </button>
@@ -231,12 +274,21 @@ const Home = () => {
                 // LOGIN FORM
                 <form onSubmit={handleLogin} className="pink-form">
                   <h2>Welcome Back!</h2>
-                  <p>To keep connected with us please login with your personal info</p>
-                  
+                  <p>
+                    To keep connected with us please login with your personal
+                    info
+                  </p>
+
                   <div className="pink-social-login">
-                    <button type="button" className="pink-social-btn">f</button>
-                    <button type="button" className="pink-social-btn">G+</button>
-                    <button type="button" className="pink-social-btn">in</button>
+                    <button type="button" className="pink-social-btn">
+                      f
+                    </button>
+                    <button type="button" className="pink-social-btn">
+                      G+
+                    </button>
+                    <button type="button" className="pink-social-btn">
+                      in
+                    </button>
                   </div>
 
                   <div className="pink-divider">or use your email</div>
@@ -256,20 +308,30 @@ const Home = () => {
                     required
                   />
 
-                  <button type="submit" className="pink-submit-btn">SIGN IN</button>
+                  <button type="submit" className="pink-submit-btn">
+                    SIGN IN
+                  </button>
                 </form>
               ) : (
                 // SIGNUP FORM
                 <form onSubmit={handleSignUp} className="pink-form">
                   <h2>Create Account</h2>
-                  
+
                   <div className="pink-social-login">
-                    <button type="button" className="pink-social-btn">f</button>
-                    <button type="button" className="pink-social-btn">G+</button>
-                    <button type="button" className="pink-social-btn">in</button>
+                    <button type="button" className="pink-social-btn">
+                      f
+                    </button>
+                    <button type="button" className="pink-social-btn">
+                      G+
+                    </button>
+                    <button type="button" className="pink-social-btn">
+                      in
+                    </button>
                   </div>
 
-                  <div className="pink-divider">or use your email for registration</div>
+                  <div className="pink-divider">
+                    or use your email for registration
+                  </div>
 
                   <input
                     type="text"
@@ -306,8 +368,22 @@ const Home = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  <input
+                    type="text"
+                    placeholder="National ID"
+                    value={nationalId}
+                    onChange={(e) => setNationalId(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setProfilePhoto(e.target.files[0])}
+                  />
 
-                  <button type="submit" className="pink-submit-btn">SIGN UP</button>
+                  <button type="submit" className="pink-submit-btn">
+                    SIGN UP
+                  </button>
                 </form>
               )}
             </div>

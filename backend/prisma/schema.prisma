@@ -65,6 +65,10 @@ model Doctor {
   password      String
   phone         String
   dob           DateTime?
+  profilePhoto      String? 
+  nationalId   String
+  specialization String
+  experience    Int
   reports       Report[]
   appointments   Appointment[]   
   prescriptions  Prescription[] 
@@ -76,7 +80,10 @@ model Patient {
   email             String   @unique
   password          String
   dob                DateTime
+  profilePhoto       String?
   phone              String
+  nationalId       String
+  address       String
   medicalHistories  MedicalHistory[]
   reports           Report[]
   appointments      Appointment[]   

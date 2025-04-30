@@ -7,6 +7,7 @@ export const login = async (email, password) => {
         const response = await axios.post(lodinUrl, { email, password });
         localStorage.setItem("token", response.data.token); 
         localStorage.setItem("role", response.data.role);
+        
         return response.data; 
     }catch (error) {
         console.error("Error logging in:", error);
