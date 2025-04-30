@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import './LoginSignup.css';
-import babyLogo from './img.png';
+import { useNavigate } from 'react-router-dom';
+import './Home.css';
+import babyLogo from '../images/imgg.png';
 
-const LoginSignup = () => {
+const Home = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showAuthForms, setShowAuthForms] = useState(false);
   const [name, setName] = useState('');
@@ -10,25 +11,50 @@ const LoginSignup = () => {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
+  const navigate = useNavigate();
 
   const doctors = [
     {
       id: 1,
       name: "Dr. Emily Wilson",
       specialty: "Obstetrician",
-      photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+      photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      bio: "Board-certified obstetrician with 15 years of experience specializing in high-risk pregnancies.",
+      education: ["MD - Harvard Medical School", "Residency - Massachusetts General Hospital"],
+      schedule: {
+        monday: "9:00 AM - 5:00 PM",
+        tuesday: "9:00 AM - 5:00 PM",
+        wednesday: "10:00 AM - 6:00 PM",
+        thursday: "9:00 AM - 5:00 PM",
+        friday: "8:00 AM - 12:00 PM"
+      }
     },
     {
       id: 2,
       name: "Dr. Michael Chen",
       specialty: "Gynecologist",
-      photo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+      photo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      bio: "Specializes in minimally invasive gynecologic surgery and reproductive health.",
+      education: ["MD - Johns Hopkins University", "Fellowship in Gynecologic Oncology"],
+      schedule: {
+        monday: "8:00 AM - 4:00 PM",
+        tuesday: "8:00 AM - 4:00 PM",
+        wednesday: "9:00 AM - 5:00 PM",
+        friday: "8:00 AM - 12:00 PM"
+      }
     },
     {
       id: 3,
-      name: "Dr. Sarah Johnson",
+      name: "Dr. Sarah William",
       specialty: "Maternal-Fetal Medicine",
-      photo: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+      photo: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      bio: "Expert in managing high-risk pregnancies and fetal complications.",
+      education: ["MD - Stanford University", "Fellowship in Maternal-Fetal Medicine"],
+      schedule: {
+        monday: "10:00 AM - 6:00 PM",
+        tuesday: "10:00 AM - 6:00 PM",
+        thursday: "8:00 AM - 4:00 PM"
+      }
     }
   ];
 
@@ -36,10 +62,16 @@ const LoginSignup = () => {
     e.preventDefault();
     if (isLogin) {
       alert(`Logging in with ${email}`);
+      navigate('/patient-profile');
     } else {
       alert(`Signing up as ${name}\nPhone: ${phone}\nDOB: ${dob}`);
+      navigate('/patient-profile');
     }
     setShowAuthForms(false);
+  };
+
+  const handleViewProfile = (doctorId) => {
+    navigate(`/doctor/${doctorId}`);
   };
 
   return (
@@ -97,7 +129,12 @@ const LoginSignup = () => {
               <div className="doctor-info">
                 <h3>{doctor.name}</h3>
                 <p>{doctor.specialty}</p>
-                <button className="view-profile-btn">View Profile</button>
+                <button 
+                  className="view-profile-btn"
+                  onClick={() => handleViewProfile(doctor.id)}
+                >
+                  View Profile
+                </button>
               </div>
             </div>
           ))}
@@ -119,13 +156,13 @@ const LoginSignup = () => {
             <div className="auth-tabs">
               <button 
                 className={`auth-tab ${isLogin ? 'active' : ''}`}
-                onClick={() => setIsLogin(true)}
+              onClick={() => setIsLogin(true)}
               >
                 Login
               </button>
               <button 
-                className={`auth-tab ${!isLogin ? 'active' : ''}`}
-                onClick={() => setIsLogin(false)}
+                  className={`auth-tab ${!isLogin ? 'active' : ''}`}
+                  onClick={() => setIsLogin(false)}
               >
                 Register
               </button>
@@ -223,4 +260,4 @@ const LoginSignup = () => {
   );
 };
 
-export default LoginSignup;
+export default Home;

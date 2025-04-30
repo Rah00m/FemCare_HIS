@@ -10,12 +10,6 @@
     --emergency: #ff5252;
     --sidebar-width: 280px;
     --nav-height: 60px;
-    --medication: #e3f2fd;
-    --medication-text: #1565c0;
-    --condition: #e8f5e9;
-    --condition-text: #2e7d32;
-    --immunization: #fff3e0;
-    --immunization-text: #ef6c00;
   }
   
   body {
@@ -23,36 +17,6 @@
     min-height: 100vh;
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  /* ... (keep all existing CSS rules) ... */
-  
-  .tag.medication {
-    background: var(--medication);
-    color: var(--medication-text);
-  }
-  
-  .tag.condition {
-    background: var(--condition);
-    color: var(--condition-text);
-  }
-  
-  .tag.immunization {
-    background: var(--immunization);
-    color: var(--immunization-text);
-  }
-  
-  .address-info {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border-left: 4px solid var(--primary);
-  }
-  
-  .address-info h3 {
-    margin-top: 0;
-    color: var(--primary-dark);
   }
   
   .app-container {

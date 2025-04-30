@@ -1,9 +1,18 @@
 const { generateToken } = require('../utils/authUtils')
 const{PrismaClient}=require('@prisma/client');
 const prisma=new PrismaClient();
-
+function  calcAge(dob){
+    const birthDate=new Date(dob);
+    const today=new Date();
+    let age=today.getFullYear()-birthDate.getFullYear();
+    const monthDiff=today.getMonth()-birthDate.getMonth();
+    if(monthDiff<0 || (monthDiff===0 && today.getDate()<birthDate.getDate())){
+        age--;
+    }
+    return age;
+}
 const signup= async (req,res)=>{
-    const {name,email,password,phone,age}=req.body;
+    const {name,email,password,phone,dob}=req.body;
     try{
         let user;
         let userId;
@@ -21,7 +30,8 @@ const signup= async (req,res)=>{
                     name,
                     email,
                     password,
-                    phone
+                    phone,
+                    dob,
                 },
             });
             userId = user.id;
@@ -46,66 +56,29 @@ const signup= async (req,res)=>{
         return res.status(400).json({ message: 'Patient with this email already exists!' });
     }
     user = await prisma.Patient.create({
-        data: { name, email, password, phone, age },
+        data: { name, email, password, phone, dob },
       });
       role = 'patient';
     userId = user.id;
-      return res.status(201).json({ message: 'Patient signed up successfully!', user });
+      return res.status(201).json({ message: 'Patient signed up successfully!', user,age });
     
         }
-    }catch(error){
-        console.error('Error during signup:', error);
-    res.status(500).json({ message: 'Failed to signup', error: error.message });
-    }
-    const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+    // Calculate age from date of birth
+    const age = calcAge(user.dob);
+    // Generate JWT token
+    const token = generateToken(userId, role);
 
-exports.signup = async (req, res) => {
-    const { name, email, password, phone, age } = req.body;
+    return res.status(201).json({
+      message: `${role.charAt(0).toUpperCase() + role.slice(1)} signed up successfully!`,
+      token,
+      role,
+      user,
+    });
 
-    try {
-        let user;
-        let userId;
-        let role = '';
-        
-        if (email.endsWith('@doctor.com')) {
-            user = await prisma.doctor.findUnique({ where: { email } });
-            if (user) return res.status(400).json({ message: 'Doctor with this email already exists!' });
-
-            user = await prisma.doctor.create({
-                data: { name, email, password, phone }
-            });
-            role = 'doctor'; 
-            userId = user.id;
-        } else if (email.endsWith('@admin.com')) {
-            user = await prisma.admin.findUnique({ where: { email } });
-            if (user) return res.status(400).json({ message: 'Admin with this email already exists!' });
-
-            user = await prisma.admin.create({
-                data: { name, email, password }
-            });
-            role = 'admin';
-            userId = user.id;
-        } else {
-            user = await prisma.patient.findUnique({ where: { email } });
-            if (user) return res.status(400).json({ message: 'Patient with this email already exists!' });
-
-            user = await prisma.patient.create({
-                data: { name, email, password, phone, age }
-            });
-            role = 'patient';
-            userId = user.id;
-        }
-
-        // Generate JWT token
-        const token = generateToken(user.id, role);
-
-        res.status(201).json({ message: `${role.charAt(0).toUpperCase() + role.slice(1)} signed up successfully!`, token, role });
-      } catch (error) {
-        console.error('Error during signup:', error);
-        res.status(500).json({ message: 'Failed to signup' });
-      }
-    };
+  } catch (error) {
+    console.error('Error during signup:', error);
+    return res.status(500).json({ message: 'Failed to signup', error: error.message });
+  }
 };
-module.exports ={signup};
+
+module.exports = { signup };
