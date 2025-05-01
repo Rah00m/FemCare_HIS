@@ -189,11 +189,11 @@ const PatientProfile = () => {
                 <InfoRow label="Date of Birth" value={user.dob?.slice(0, 10) || "N/A"} />
                 <InfoRow label="Blood Group" value={bloodGroup?.bloodGroup || "N/A"} />
                 <div className="family-info">
-                  <h3>Pregnancy Information</h3>
+                  {/* <h3>Pregnancy Information</h3>
                   <InfoRow
                     label="Current Week"
                     value={`${pregnancyInfo?.currentWeek || "N/A"} weeks`}
-                  />
+                  /> */}
                 </div>
               </>
             )}
@@ -206,15 +206,14 @@ const PatientProfile = () => {
             <h2>Contact Details</h2>
             <InfoRow label="Email" value={user?.email || contact?.email || "N/A"} />
             <InfoRow label="Phone" value={user?.phone || contact?.primaryMobile || "N/A"} />
-            <InfoRow label="Secondary Phone" value={contact?.secondaryMobile || "N/A"} />
             <InfoRow label="Address" value={user?.address || contact?.address || "N/A"} />
             
-            <div className="emergency-contact">
+            {/* <div className="emergency-contact">
               <h3>Emergency Contact</h3>
               <InfoRow label="Name" value={contact?.emergencyContact?.name || "N/A"} isEmergency />
               <InfoRow label="Relationship" value={contact?.emergencyContact?.relationship || "N/A"} isEmergency />
               <InfoRow label="Phone" value={contact?.emergencyContact?.phone || "N/A"} isEmergency />
-            </div>
+            </div> */}
           </div>
         );
 

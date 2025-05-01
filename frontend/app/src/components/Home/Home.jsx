@@ -8,6 +8,7 @@ const Home = () => {
   const [showAuthForms, setShowAuthForms] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [adress, setAdress] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
@@ -98,6 +99,7 @@ const Home = () => {
         email,
         password,
       });
+
       const { token, role } = response.data;
       console.log("Token:", token);
       localStorage.setItem("token", token); // حفظ التوكن في الlocalStorage
@@ -109,7 +111,7 @@ const Home = () => {
         // إضافة المنطق للـ doctor أو الـ admin إذا كان ذلك مطلوبًا
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.error("Error logging in:", error.response?.data || error.message);
       alert("Login failed. Please try again.");
     }
   };
@@ -127,9 +129,14 @@ const Home = () => {
     formData.append("dob", dob);
     formData.append("password", password);
     formData.append("nationalId", nationalId);
+    formData.append("address", adress);
     formData.append("profilePhoto", profilePhoto);
     console.log("Profile Photo:", profilePhoto); // تحقق إذا كانت الصورة موجودة أم لا
     console.log("Form data being sent:", formData);
+    if (!profilePhoto) {
+      alert("Please upload a profile photo.");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -141,6 +148,7 @@ const Home = () => {
           },
         }
       );
+      console.log("Response:", response.data);
       const { token, role } = response.data;
       console.log("Token:", token);
       localStorage.setItem("token", token); // حفظ التوكن في الlocalStorage
@@ -151,9 +159,11 @@ const Home = () => {
       } else {
         // التعامل مع باقي الأدوار إذا لزم الأمر
       }
-      
     } catch (error) {
-      console.error("Error signing up:", error);
+      console.error(
+        "Error during signup:",
+        error.response ? error.response.data : error.message
+      );
       alert("Sign Up failed. Please try again.");
     }
   };
@@ -352,6 +362,13 @@ const Home = () => {
                     placeholder="Phone Number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="adress"
+                    placeholder="Adress"
+                    value={adress}
+                    onChange={(e) => setAdress(e.target.value)}
                     required
                   />
                   <input
