@@ -9,6 +9,7 @@ const PatientProfile = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [patientData, setPatientData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [isEditingMedical, setIsEditingMedical] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: "",
@@ -35,10 +36,13 @@ const PatientProfile = () => {
         // Initialize edit forms with current data
         setEditFormData({
           name: data.user?.name || "",
-          dob: data.user?.dob?.slice(0, 10) || "",
+          dob: data.user?.dob?.slice(0, 10) || "",  // تأكد من إضافة جزء التاريخ بشكل صحيح
           nationalId: data.user?.nationalId || "",
-          patientId: data.user?.patientId || ""
+          email: data.user?.email || "",
+          phone: data.user?.phone || "",
+          address: data.user?.address || "",
         });
+        setProfilePhoto(data.user?.profilePhoto || null); // Set the initial profile photo        
         
         setEditMedicalFormData({
           allergies: data.medicalHistory?.allergies?.join(", ") || "",
@@ -52,6 +56,45 @@ const PatientProfile = () => {
     };
     fetchPatientData();
   }, []);
+  const token = localStorage.getItem("token");
+
+  const handleUpdateProfile = async () => {
+    const formData = new FormData();
+    formData.append('name', editFormData.name);
+    formData.append('email', editFormData.email);
+    formData.append('phone', editFormData.phone);
+    formData.append('dob', editFormData.dob);
+    formData.append('address', editFormData.address);
+    if (profilePhoto) {
+      formData.append('profilePhoto', profilePhoto);
+  }
+    if (editFormData.password) {
+        formData.append('password', editFormData.password);
+    }
+    // If you want to allow image uploading
+
+    try {
+      const response = await fetch('http://localhost:5000/api/user/update', {
+        method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Add your JWT token here
+            },
+            body: formData,
+        });
+        if (response.ok) {
+          const result = await response.json();
+            alert('Profile updated successfully!');
+            setPatientData(result.user);  // Update patient data state with updated user data
+            setIsEditing(false);  // Close the edit form
+        } else {
+          const errorResult = await response.text();
+            alert(`Error: ${errorResult}`);
+        }
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('An error occurred while updating the profile.');
+    }
+};
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -71,18 +114,41 @@ const PatientProfile = () => {
 
   const handleSavePersonalInfo = async () => {
     try {
-      // Add your save logic here
-      console.log("Saving personal info:", editFormData);
-      // After successful save:
-      setIsEditing(false);
-      // Refresh data
-      const data = await getuserDetails();
-      setPatientData(data);
+      const formData = new FormData();
+      formData.append('name', editFormData.name);
+      formData.append('email', editFormData.email);
+      formData.append('phone', editFormData.phone);
+      formData.append('dob', editFormData.dob);
+      formData.append('address', editFormData.address);
+      if (profilePhoto) {
+        formData.append('profilePhoto', profilePhoto);
+      }
+  
+      const response = await fetch('http://localhost:5000/api/user/update', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert('Profile updated successfully!');
+        setPatientData((prevData) => ({
+          ...prevData,
+          user: result.user, 
+        }));        setIsEditing(false);
+      } else {
+        alert(`Error: ${result.message}`);
+      }
     } catch (error) {
       console.error("Error saving personal info:", error);
+      alert('An error occurred while updating the profile.');
     }
   };
-
+  
   const handleSaveMedicalHistory = async () => {
     try {
       // Add your save logic here
@@ -151,6 +217,7 @@ const PatientProfile = () => {
                     name="nationalId"
                     value={editFormData.nationalId}
                     onChange={handleEditChange}
+                    disabled 
                   />
                 </div>
                 <div className="form-group">
@@ -472,20 +539,36 @@ const PatientProfile = () => {
         </div>
 
         <aside className="profile-sidebar">
-          <div className="profile-header">
-            <div className="profile-photo-container">
-              {patientData.profilePhoto ? (
-                <img
-                  src={patientData.profilePhoto}
-                  alt="Patient"
-                  className="profile-photo"
-                />
-              ) : (
-                <div className="profile-photo-placeholder">
-                  {user.name?.split(' ').map(n => n[0]).join('') || "P"}
-                </div>
-              )}
-              <button className="edit-photo-btn">Edit</button>
+        <div className="profile-header">
+  <div className="profile-photo-container">
+    {patientData.profilePhoto ? (
+      <img
+        src={patientData.profilePhoto}
+        alt="Patient"
+        className="profile-photo"
+      />
+    ) : (
+      <div className="profile-photo-placeholder">
+        {user.name?.split(' ').map(n => n[0]).join('') || "P"}
+      </div>
+    )}
+                <div className="edit-photo-wrapper">
+                  <label htmlFor="photo-upload" className="edit-photo-btn">+</label>
+                  <input
+  id="photo-upload"
+  type="file"
+  accept="image/*"
+  style={{ display: "none" }}
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePhoto(file);
+      handleUpdateProfile();
+    }
+  }}
+/>
+
+</div>
             </div>
             <h1>{user.name}</h1>
             <p className="patient-id">ID: {user.id}</p>

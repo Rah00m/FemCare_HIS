@@ -4,11 +4,10 @@ const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-// دالة لحساب العمر بناءً على تاريخ الميلاد
 function calcAge(dob) {
     const birthDate = new Date(dob);
     if (isNaN(birthDate.getTime())) { 
-        return null; // في حال كان التاريخ غير صالح
+        return null; 
     }
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -20,7 +19,7 @@ function calcAge(dob) {
 }
 
 const signup = async (req, res) => {
-    const { name, email, password, phone, dob, nationalId } = req.body;
+    const { name, email, password, phone, dob, nationalId, address  } = req.body;
 
     if (!dob) {
         return res.status(400).json({ message: 'Date of birth (dob) is required!' });
@@ -100,7 +99,7 @@ const signup = async (req, res) => {
                     dob: parsedDob,
                     nationalId,
                     profilePhoto,
-                    address: "",     
+                    address,   
                 },
             });
             userId = user.id;

@@ -735,3 +735,22 @@ body {
     padding: 8px;
   }
 }
+.edit-photo-wrapper {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+  }
+  
+  .edit-photo-btn {
+    background-color: #eee;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    padding: 0;
+  }
+  

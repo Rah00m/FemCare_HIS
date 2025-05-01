@@ -8,7 +8,7 @@ const Home = () => {
   const [showAuthForms, setShowAuthForms] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [adress, setAdress] = useState("");
+  const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
@@ -129,7 +129,7 @@ const Home = () => {
     formData.append("dob", dob);
     formData.append("password", password);
     formData.append("nationalId", nationalId);
-    formData.append("address", adress);
+    formData.append('address', address);
     formData.append("profilePhoto", profilePhoto);
     console.log("Profile Photo:", profilePhoto); // تحقق إذا كانت الصورة موجودة أم لا
     console.log("Form data being sent:", formData);
@@ -365,10 +365,10 @@ const Home = () => {
                     required
                   />
                   <input
-                    type="adress"
-                    placeholder="Adress"
-                    value={adress}
-                    onChange={(e) => setAdress(e.target.value)}
+                    type="text"
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                     required
                   />
                   <input

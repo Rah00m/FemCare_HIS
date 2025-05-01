@@ -8,7 +8,6 @@ const adminRoutes = require("./routes/adminRoutes");
 const loginRoutes = require("./routes/loginRoute");
 const signup = require("./routes/signupRoutes");
 const userRoutes = require("./routes/userRoutes");
-
 dotenv.config();
 
 if (!process.env.DATABASE_URL) {
