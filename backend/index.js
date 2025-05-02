@@ -3,7 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const cors = require("cors");
 const dotenv = require("dotenv");
-
+const patientNoteRoutes = require('./routes/patientNoteRoutes');
 const adminRoutes = require("./routes/adminRoutes");
 const loginRoutes = require("./routes/loginRoute");
 const signup = require("./routes/signupRoutes");
@@ -29,6 +29,7 @@ app.use("/api/login", loginRoutes);
 app.use("/api/signup", signup);
 app.use("/api", userRoutes);
 
+app.use('/api', patientNoteRoutes);  
 app.listen(process.env.PORT || 5000, async () => {
   try {
     await prisma.$connect();
