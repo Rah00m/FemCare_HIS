@@ -76,7 +76,7 @@ const PatientProfile = () => {
     formData.append('profilePhoto', file);
     
     try {
-      const response = await fetch('http://localhost:5000/api/user/update-photo', {
+      const response = await fetch("http://localhost:5000/api/user/update", {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -93,10 +93,12 @@ const PatientProfile = () => {
             profilePhoto: result.profilePhoto
           }
         }));
+        window.location.reload();
       } else {
         const error = await response.json();
         alert(`Error: ${error.message}`);
       }
+       window.location.reload();
     } catch (error) {
       console.error('Error updating profile photo:', error);
       alert('An error occurred while updating the profile photo.');
@@ -753,37 +755,50 @@ const PatientProfile = () => {
         </div>
 
         <aside className="profile-sidebar">
-        <div className="profile-header">
-  <div className="profile-photo-container">
-    {patientData.profilePhoto ? (
-      <img
-        src={patientData.profilePhoto}
-        alt="Patient"
-        className="profile-photo"
-      />
-    ) : (
-      <div className="profile-photo-placeholder">
-        {user.name?.split(' ').map(n => n[0]).join('') || "P"}
-      </div>
-    )}
-                <div className="edit-photo-wrapper">
-                  <label htmlFor="photo-upload" className="edit-photo-btn">+</label>
-                  <input
-  id="photo-upload"
-  type="file"
-  accept="image/*"
-  style={{ display: "none" }}
-  onChange={(e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfilePhoto(file); // تعيين الصورة في الـ state
-      handleUpdateProfile(); // إرسال الصورة مع البيانات في نفس الوقت
-    }
-  }}
-/>
-
-
-</div>
+          <div className="profile-header">
+            <div className="profile-photo-container">
+              {isUploading ? (
+                <div className="photo-uploading">
+                  <div className="spinner"></div>
+                  <span>Uploading...</span>
+                </div>
+              ) : user.profilePhoto ? (
+                <img 
+                  src={`http://localhost:5000/uploads/${user.profilePhoto}?${new Date().getTime()}`} 
+                  alt="Patient" 
+                  className="profile-photo" 
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'block';
+                  }}
+                />
+              ) : (
+                <div className="profile-photo-placeholder">
+                  {user.name?.split(' ').map(n => n[0]).join('') || "P"}
+                </div>
+              )}
+              <div className="edit-photo-wrapper">
+                <label htmlFor="photo-upload" className="edit-photo-btn">
+                  {isUploading ? (
+                    <div className="uploading-spinner"></div>
+                  ) : (
+                    "+"
+                  )}
+                </label>
+                <input
+                  id="photo-upload"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      handlePhotoUpload(file);
+                    }
+                  }}
+                  disabled={isUploading}
+                />
+              </div>
             </div>
             <h1>{user.name}</h1>
             <p className="patient-id">ID: {user.id}</p>
