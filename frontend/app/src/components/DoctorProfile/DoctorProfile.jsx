@@ -188,7 +188,7 @@ const DoctorProfile = () => {
               alt="Baby Logo" 
               className="logo-image"
             />
-            <span className="logo-text">Obstetrics and Gynecology</span>
+            <span className="logo-text">HerCare Medical Center</span>
           </div>
           <div className="nav-links">
             <a href="#office" className="nav-link">Locations</a>
@@ -206,11 +206,7 @@ const DoctorProfile = () => {
           <button className="nav-button">
             <i className="icon-settings"></i> Settings
           </button>
-          <div className="user-profile">
-            <div className="user-avatar">
-            {doctor?.name?.split(' ').map(n => n[0]).join('')}
-            </div>
-          </div>
+        
         </div>
       </nav>
 

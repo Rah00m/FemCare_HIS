@@ -748,10 +748,14 @@ const PatientProfile = () => {
           <button className="nav-button" onClick={() => navigate("/")}>
             <i className="icon-calendar"></i> Home
           </button>
+          <div className="nav-right">
+          <button className="nav-button" onClick={() => navigate("/")}>
+            <i className="icon-calendar"></i> Logout
+          </button>
+         </div>
           <button className="nav-button">
             <i className="icon-settings"></i> Settings
           </button>
-        
         </div>
       </nav>
 
