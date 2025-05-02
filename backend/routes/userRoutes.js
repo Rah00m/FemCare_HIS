@@ -9,7 +9,6 @@ const { verifyTokenMiddleware } = require("../utils/authMiddleware"); // است�
 const upload = require("../utils/uploadMiddleware");
 const router = express.Router();
 router.get("/user/details", verifyTokenMiddleware, getUserDetails);
-
 router.put(
   "/user/update",
   verifyTokenMiddleware,

@@ -88,6 +88,7 @@ model Patient {
   reports           Report[]
   appointments      Appointment[]   
   prescriptions     Prescription[]  
+  patientNotes      PatientNote[] 
 }
 
 model Appointment {
@@ -111,3 +112,13 @@ model Prescription {
   doctor      Doctor   @relation(fields: [doctorId], references: [id])
   patient     Patient  @relation(fields: [patientId], references: [id])
 }
+model PatientNote {
+  id          Int      @id @default(autoincrement())
+  content     String
+  doctorName  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  patientId   Int
+  patient     Patient  @relation(fields: [patientId], references: [id])
+}
+

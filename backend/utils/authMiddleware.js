@@ -35,7 +35,12 @@ const verifyTokenMiddleware = (req, res, next) => {
     if (!decoded) {
         return res.status(401).json({ message: 'Invalid or expired token' });
     }
-
+    // req.user = decoded
+    req.user = { 
+        id: decoded.id, 
+        role: decoded.role // تأكد من أن التوكن يحتوي على الـ role
+    };
+    // req.user = { id: decoded.id }
     req.userId = decoded.id; // تخزين الـ userId في الطلب للوصول إليه لاحقًا
     next();  // الانتقال إلى الخطوة التالية (الدالة)
 };

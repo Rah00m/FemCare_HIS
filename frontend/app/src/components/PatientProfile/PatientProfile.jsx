@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./PatientProfile.css";
 import babyLogo from "../images/imgg.png";
 import { getuserDetails } from "../auth/loginAuth";
+import PatientNotes from "./PatientNotes";  
+// import {handleAddNote, handleUpdateNote, handleDeleteNote  }from "./PatientNotes"; // Assuming you have a separate file for handling notes
 
 const PatientProfile = () => {
   const [activeSection, setActiveSection] = useState("basic-info");
@@ -28,9 +30,6 @@ const PatientProfile = () => {
     chronicConditions: "",
     medications: ""
   });
-  const [newNote, setNewNote] = useState("");
-  const [editingNoteId, setEditingNoteId] = useState(null);
-  const [editedNoteText, setEditedNoteText] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
 
@@ -65,6 +64,10 @@ const PatientProfile = () => {
     };
     fetchPatientData();
   }, []);
+  if (!patientData) {
+    return <div>Loading...</div>; // عرض شاشة تحميل لحين تحميل البيانات
+  }
+
 
   const token = localStorage.getItem("token");
 
@@ -233,111 +236,111 @@ const PatientProfile = () => {
     }
   };
 
-  const handleAddNote = async () => {
-    if (!newNote.trim()) return;
+  // const handleAddNote = async () => {
+  //   if (!newNote.trim()) return;
     
-    try {
-      const response = await fetch('http://localhost:5000/api/user/notes', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: newNote
-        }),
-      });
+  //   try {
+  //     const response = await fetch('http://localhost:5000/api/user/notes', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         text: newNote
+  //       }),
+  //     });
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (response.ok) {
-        setNewNote("");
-        setPatientData(prev => ({
-          ...prev,
-          notes: [...(prev.notes || []), result.note]
-        }));
-      } else {
-        alert(`Error: ${result.message}`);
-      }
-    } catch (error) {
-      console.error("Error adding note:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       setNewNote("");
+  //       setPatientData(prev => ({
+  //         ...prev,
+  //         notes: [...(prev.notes || []), result.note]
+  //       }));
+  //     } else {
+  //       alert(`Error: ${result.message}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding note:", error);
+  //   }
+  // };
 
-  const handleEditNote = (note) => {
-    setEditingNoteId(note._id);
-    setEditedNoteText(note.text);
-  };
+  // const handleEditNote = (note) => {
+  //   setEditingNoteId(note._id);
+  //   setEditedNoteText(note.text);
+  // };
 
-  const handleCancelEditNote = () => {
-    setEditingNoteId(null);
-    setEditedNoteText("");
-  };
+  // const handleCancelEditNote = () => {
+  //   setEditingNoteId(null);
+  //   setEditedNoteText("");
+  // };
 
-  const handleUpdateNote = async (noteId) => {
-    if (!editedNoteText.trim()) return;
+  // const handleUpdateNote = async (noteId) => {
+  //   if (!editedNoteText.trim()) return;
     
-    try {
-      const response = await fetch(`http://localhost:5000/api/user/notes/${noteId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: editedNoteText
-        }),
-      });
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/user/notes/${noteId}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         text: editedNoteText
+  //       }),
+  //     });
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (response.ok) {
-        setPatientData(prev => ({
-          ...prev,
-          notes: prev.notes.map(note => 
-            note._id === noteId ? { ...note, text: result.note.text } : note
-          )
-        }));
-        setEditingNoteId(null);
-        setEditedNoteText("");
-      } else {
-        alert(`Error: ${result.message}`);
-      }
-    } catch (error) {
-      console.error("Error updating note:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       setPatientData(prev => ({
+  //         ...prev,
+  //         notes: prev.notes.map(note => 
+  //           note._id === noteId ? { ...note, text: result.note.text } : note
+  //         )
+  //       }));
+  //       setEditingNoteId(null);
+  //       setEditedNoteText("");
+  //     } else {
+  //       alert(`Error: ${result.message}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating note:", error);
+  //   }
+  // };
 
-  const handleDeleteNote = async (noteId) => {
-    if (!window.confirm("Are you sure you want to delete this note?")) return;
+  // const handleDeleteNote = async (noteId) => {
+  //   if (!window.confirm("Are you sure you want to delete this note?")) return;
     
-    try {
-      const response = await fetch(`http://localhost:5000/api/user/notes/${noteId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/user/notes/${noteId}`, {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //       },
+  //     });
 
-      if (response.ok) {
-        setPatientData(prev => ({
-          ...prev,
-          notes: prev.notes.filter(note => note._id !== noteId)
-        }));
-      } else {
-        const error = await response.json();
-        alert(`Error: ${error.message}`);
-      }
-    } catch (error) {
-      console.error("Error deleting note:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       setPatientData(prev => ({
+  //         ...prev,
+  //         notes: prev.notes.filter(note => note._id !== noteId)
+  //       }));
+  //     } else {
+  //       const error = await response.json();
+  //       alert(`Error: ${error.message}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting note:", error);
+  //   }
+  // };
 
-  if (!patientData || !patientData.user) {
-    return <div className="loading-container">Loading patient data...</div>;
-  }
+  // if (!patientData || !patientData.user) {
+  //   return <div className="loading-container">Loading patient data...</div>;
+  // }
 
-  const { user, pregnancyInfo, bloodGroup, medicalHistory, notes } = patientData;
+  const { user, pregnancyInfo, bloodGroup, medicalHistory } = patientData;
 
   const renderSection = () => {
     switch (activeSection) {
@@ -637,82 +640,89 @@ const PatientProfile = () => {
           </div>
         );
 
-      case "notes":
-        return (
-          <div className="content-section">
-            <h2>Patient Notes</h2>
-            <div className="notes-container">
-              {notes?.length > 0 ? (
-                notes.map((note, index) => (
-                  <div key={index} className="note-item">
-                    {editingNoteId === note._id ? (
-                      <div className="note-edit-form">
-                        <textarea
-                          value={editedNoteText}
-                          onChange={(e) => setEditedNoteText(e.target.value)}
-                          rows="3"
-                        />
-                        <div className="note-edit-actions">
-                          <button 
-                            className="save-button small"
-                            onClick={() => handleUpdateNote(note._id)}
-                          >
-                            Save
-                          </button>
-                          <button 
-                            className="cancel-button small"
-                            onClick={handleCancelEditNote}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="note-text">{note.text}</div>
-                        <div className="note-meta">
-                          {note.doctor || "Dr. Smith"} • {new Date(note.date).toLocaleDateString()}
-                        </div>
-                        <div className="note-actions">
-                          <button 
-                            className="edit-button small"
-                            onClick={() => handleEditNote(note)}
-                          >
-                            Edit
-                          </button>
-                          <button 
-                            className="delete-button small"
-                            onClick={() => handleDeleteNote(note._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </>
-                    )}
-                    {index < notes.length - 1 && <hr className="note-divider" />}
-                  </div>
-                ))
-              ) : (
-                <p>No notes available</p>
-              )}
-            </div>
+      // case "notes":
+        // return (
+        //   <div className="content-section">
+        //     <h2>Patient Notes</h2>
+        //     <div className="notes-container">
+        //       {notes?.length > 0 ? (
+        //         notes.map((note, index) => (
+        //           <div key={index} className="note-item">
+        //             {editingNoteId === note._id ? (
+        //               <div className="note-edit-form">
+        //                 <textarea
+        //                   value={editedNoteText}
+        //                   onChange={(e) => setEditedNoteText(e.target.value)}
+        //                   rows="3"
+        //                 />
+        //                 <div className="note-edit-actions">
+        //                   <button 
+        //                     className="save-button small"
+        //                     onClick={() => handleUpdateNote(note._id)}
+        //                   >
+        //                     Save
+        //                   </button>
+        //                   <button 
+        //                     className="cancel-button small"
+        //                     onClick={handleCancelEditNote}
+        //                   >
+        //                     Cancel
+        //                   </button>
+        //                 </div>
+        //               </div>
+        //             ) : (
+        //               <>
+        //                 <div className="note-text">{note.text}</div>
+        //                 <div className="note-meta">
+        //                   {note.doctor || "Dr. Smith"} • {new Date(note.date).toLocaleDateString()}
+        //                 </div>
+        //                 <div className="note-actions">
+        //                   <button 
+        //                     className="edit-button small"
+        //                     onClick={() => handleEditNote(note)}
+        //                   >
+        //                     Edit
+        //                   </button>
+        //                   <button 
+        //                     className="delete-button small"
+        //                     onClick={() => handleDeleteNote(note._id)}
+        //                   >
+        //                     Delete
+        //                   </button>
+        //                 </div>
+        //               </>
+        //             )}
+        //             {index < notes.length - 1 && <hr className="note-divider" />}
+        //           </div>
+        //         ))
+        //       ) : (
+        //         <p>No notes available</p>
+        //       )}
+        //     </div>
             
-            <div className="add-note-section">
-              <h3>Add New Note</h3>
-              <textarea
-                value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
-                placeholder="Write your note here..."
-                rows="4"
-              />
-              <button className="add-note-button" onClick={handleAddNote}>
-                Add Note
-              </button>
-            </div>
-          </div>
-        );
+        //     <div className="add-note-section">
+        //       <h3>Add New Note</h3>
+        //       <textarea
+        //         value={newNote}
+        //         onChange={(e) => setNewNote(e.target.value)}
+        //         placeholder="Write your note here..."
+        //         rows="4"
+        //       />
+        //       <button className="add-note-button" onClick={handleAddNote}>
+        //         Add Note
+        //       </button>
+        //     </div>
+        //   </div>
+        // );
 
-      default:
+      
+        case "notes":
+          return (
+
+              <PatientNotes patientId={patientData.user.id} user={patientData.user} />
+          );
+        
+        default:
         return null;
     }
   };
@@ -723,7 +733,7 @@ const PatientProfile = () => {
         <div className="nav-left">
           <div className="logo">
             <img src={babyLogo} alt="Baby Logo" className="logo-image" />
-            <span className="logo-text">Saudi German Hospital</span>
+            <span className="logo-text">HerCare Medical Center</span>
           </div>
           <div className="nav-links">
             <a href="#office" className="nav-link">Locations</a>
