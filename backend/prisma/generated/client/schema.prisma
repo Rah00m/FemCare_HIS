@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define enums
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+  doctorId    Int
+  patientId   Int
+
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id])
+}
+
+model MedicalHistory {
+  id                Int      @id @default(autoincrement())
+  allergies         String[]
+  surgeries         String[]
+  chronicConditions String[]
+  medications       String[]
+  date              DateTime @default(now())
+  patientId         Int
+  patient           Patient  @relation(fields: [patientId], references: [id])
+}
+
+model Doctor {
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String         @unique
+  password       String
+  phone          String
+  dob            DateTime?
+  profilePhoto   String?
+  nationalId     String
+  specialization String
+  experience     Int
+  reports        Report[]
+  appointments   Appointment[]
+  prescriptions  Prescription[]
+}
+
+model Patient {
+  id               Int              @id @default(autoincrement())
+  name             String
+  email            String           @unique
+  password         String
+  dob              DateTime
+  profilePhoto     String?
+  phone            String
+  nationalId       String
+  address          String
+  medicalHistories MedicalHistory[]
+  reports          Report[]
+  appointments     Appointment[]
+  prescriptions    Prescription[]
+  patientNotes     PatientNote[]
+}
+
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  date      DateTime
+  status    AppointmentStatus
+  doctorId  Int
+  patientId Int
+  doctor    Doctor            @relation(fields: [doctorId], references: [id])
+  patient   Patient           @relation(fields: [patientId], references: [id])
+}
+
+model Prescription {
+  id         Int       @id @default(autoincrement())
+  medication String
+  dosage     String
+  frequency  Frequency
+  date       DateTime  @default(now())
+  doctorId   Int
+  patientId  Int
+  doctor     Doctor    @relation(fields: [doctorId], references: [id])
+  patient    Patient   @relation(fields: [patientId], references: [id])
+}
+
+model PatientNote {
+  id         Int      @id @default(autoincrement())
+  content    String
+  doctorName String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  patientId  Int
+  patient    Patient  @relation(fields: [patientId], references: [id])
+}

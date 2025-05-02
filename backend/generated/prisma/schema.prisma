@@ -46,16 +46,17 @@ model Report {
 }
 
 model MedicalHistory {
-  id        Int      @id @default(autoincrement())
-  diagnosis String
-  treatment String
-  dose      String
-  notes     String?
-  date      DateTime @default(now())
-  patientId Int
-
-  patient Patient @relation(fields: [patientId], references: [id])
+  id                Int      @id @default(autoincrement())
+  allergies         String[]
+  surgeries         String[]
+  chronicConditions String[]
+  medications       String[]
+  date              DateTime @default(now())
+  patientId         Int
+  patient           Patient  @relation(fields: [patientId], references: [id])
 }
+
+
 
 model Doctor {
   id            Int            @id @default(autoincrement())
