@@ -741,11 +741,7 @@ const PatientProfile = () => {
           <button className="nav-button">
             <i className="icon-settings"></i> Settings
           </button>
-          <div className="user-profile">
-            <div className="user-avatar">
-              {user.name?.split(' ').map(n => n[0]).join('') || "P"}
-            </div>
-          </div>
+        
         </div>
       </nav>
 
