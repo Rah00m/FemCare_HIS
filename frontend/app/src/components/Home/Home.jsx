@@ -180,7 +180,7 @@ const Home = () => {
         <div className="nav-left">
           <div className="logo">
             <img src={babyLogo} alt="Baby Logo" className="logo-image" />
-            <span className="logo-text">Saudi German Hospital</span>
+            <span className="logo-text">HerCare Medical Center</span>
           </div>
           <div className="nav-links">
             <a href="#office" className="nav-link">
