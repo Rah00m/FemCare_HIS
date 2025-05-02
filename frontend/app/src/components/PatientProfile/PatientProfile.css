@@ -63,7 +63,7 @@ body {
 
 .logo-text {
   font-weight: bold;
-  color: var(--primary-dark);
+  color: #5f0421cd;
   font-size: 20px;
   white-space: nowrap;
 }
