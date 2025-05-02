@@ -121,7 +121,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #b93861;
+  background: #c33b66;
   color: white;
   display: flex;
   align-items: center;
@@ -214,19 +214,32 @@ body {
   border: 4px solid white;
 }
 
-.edit-photo-btn {
+.edit-photo-wrapper {
   position: absolute;
   bottom: 5px;
   right: 5px;
+  width: 24px;
+  height: 24px;
+}
+
+.edit-photo-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
   background: white;
   color: var(--primary);
   border: none;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 14px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .edit-photo-btn:hover {
@@ -502,7 +515,7 @@ body {
 }
 
 .edit-button {
-  background-color:  #c33b66;
+  background-color: #c33b66;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -660,6 +673,38 @@ body {
   margin-bottom: 20px;
 }
 
+.uploading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+.photo-uploading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+}
+
+.photo-uploading .spinner {
+  margin-bottom: 5px;
+}
+
+.photo-uploading span {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -735,22 +780,3 @@ body {
     padding: 8px;
   }
 }
-.edit-photo-wrapper {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-  }
-  
-  .edit-photo-btn {
-    background-color: #eee;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    font-size: 18px;
-    line-height: 24px;
-    text-align: center;
-    padding: 0;
-  }
-  
