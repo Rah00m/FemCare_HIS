@@ -2,7 +2,7 @@
 
 ## Team Name:
 
-**ob-gyn-neers** is a team specialized in the **Obstetrics and Gynecology** department at [Hospital Name].
+**ob-gyn-neers** is a team specialized in the **Obstetrics and Gynecology** department at HerCare Medical Center.
 
 ## About the Department:
 
