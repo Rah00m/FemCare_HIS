@@ -1,23 +1,15 @@
-/*
-  Warnings:
-
-  - Added the required column `experience` to the `Doctor` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `nationalId` to the `Doctor` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `specialization` to the `Doctor` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `address` to the `Patient` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `nationalId` to the `Patient` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- AlterTable
-ALTER TABLE "Doctor" ADD COLUMN     "experience" INTEGER NOT NULL,
-ADD COLUMN     "nationalId" TEXT NOT NULL,
-ADD COLUMN     "profilePhoto" TEXT,
-ADD COLUMN     "specialization" TEXT NOT NULL;
+ALTER TABLE "Doctor" 
+ADD COLUMN "experience" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN "nationalId" TEXT NOT NULL DEFAULT '',
+ADD COLUMN "profilePhoto" TEXT,
+ADD COLUMN "specialization" TEXT NOT NULL DEFAULT '';
 
 -- AlterTable
-ALTER TABLE "Patient" ADD COLUMN     "address" TEXT NOT NULL,
-ADD COLUMN     "nationalId" TEXT NOT NULL,
-ADD COLUMN     "profilePhoto" TEXT;
+ALTER TABLE "Patient" 
+ADD COLUMN "address" TEXT NOT NULL DEFAULT '',
+ADD COLUMN "nationalId" TEXT NOT NULL DEFAULT '',
+ADD COLUMN "profilePhoto" TEXT;
 
 -- CreateTable
 CREATE TABLE "PatientNote" (
