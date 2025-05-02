@@ -131,7 +131,7 @@ const Home = () => {
     formData.append("nationalId", nationalId);
     formData.append('address', address);
     formData.append("profilePhoto", profilePhoto);
-    console.log("Profile Photo:", profilePhoto); // تحقق إذا كانت الصورة موجودة أم لا
+    console.log("Profile Photo:", profilePhoto);       
     console.log("Form data being sent:", formData);
     if (!profilePhoto) {
       alert("Please upload a profile photo.");
@@ -151,13 +151,12 @@ const Home = () => {
       console.log("Response:", response.data);
       const { token, role } = response.data;
       console.log("Token:", token);
-      localStorage.setItem("token", token); // حفظ التوكن في الlocalStorage
+      localStorage.setItem("token", token); 
       if (role === "patient") {
         navigate("/patient-profile");
       } else if (role === "doctor") {
         navigate("/doctor-profile");
       } else {
-        // التعامل مع باقي الأدوار إذا لزم الأمر
       }
     } catch (error) {
       console.error(

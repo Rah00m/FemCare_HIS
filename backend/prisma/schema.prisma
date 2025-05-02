@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -23,7 +21,6 @@ enum Frequency {
   MONTHLY
 }
 
-// Define models
 model Admin {
   id        Int      @id @default(autoincrement())
   name      String
@@ -45,7 +42,6 @@ model Report {
   doctor      Doctor   @relation(fields: [doctorId], references: [id])
   patient     Patient  @relation(fields: [patientId], references: [id])
 }
-
 model MedicalHistory {
   id                Int      @id @default(autoincrement())
   allergies         String[]
