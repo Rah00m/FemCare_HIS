@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import babyLogo from "../images/imgg.png";
 import axios from "axios";
+import Backs from "./Backs";
+import Navbar from "./Navbar";
 const Home = () => {
+  // const [scrollCase, setScrollCase] = useState(false);
+  const landingRef = React.useRef(null);
   const [isLogin, setIsLogin] = useState(true);
   const [showAuthForms, setShowAuthForms] = useState(false);
   const [name, setName] = useState("");
@@ -15,7 +18,6 @@ const Home = () => {
   const navigate = useNavigate();
   const [nationalId, setNationalId] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
-
   const doctors = [
     {
       id: 1,
@@ -173,56 +175,12 @@ const Home = () => {
   };
 
   return (
+    <>
+    
     <div className="app-container">
-      {/* Top Navigation Bar */}
-      <nav className="top-nav">
-        <div className="nav-left">
-          <div className="logo">
-            <img src={babyLogo} alt="Baby Logo" className="logo-image" />
-            <span className="logo-text">HerCare Medical Center</span>
-          </div>
-          <div className="nav-links">
-            <a href="#office" className="nav-link">
-              Locations
-            </a>
-            <a href="#services" className="nav-link">
-              Services
-            </a>
-            <a href="#specialties" className="nav-link">
-              Find an obstetrician
-            </a>
-            <a href="#pricing" className="nav-link">
-              Appointments
-            </a>
-            <a href="#about" className="nav-link">
-              About Us
-            </a>
-            <a href="#contact" className="nav-link">
-              Contact Us
-            </a>
-          </div>
-        </div>
-        <div className="nav-right">
-          <button className="nav-button">
-            <span>Home</span>
-          </button>
-          <button
-            className="nav-button login-btn"
-            onClick={() => setShowAuthForms(!showAuthForms)}
-          >
-            <span>Login</span>
-          </button>
-          <button className="nav-button">
-            <span>Settings</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* Department Title */}
-      <div className="department-title">
-        <h1>Department of Obstetrics and Gynecology</h1>
-      </div>
-
+            <Navbar setShowAuthForms={setShowAuthForms}
+            landingRef={landingRef} />
+<Backs landingRef={landingRef} curved={false} />
       {/* Doctor Profiles Section */}
       <div className="doctors-container">
         <h2 className="doctors-title">Our Specialists</h2>
@@ -406,7 +364,10 @@ const Home = () => {
           </div>
         </div>
       )}
+    {/* </div> */}
     </div>
+    </>
+    
   );
 };
 

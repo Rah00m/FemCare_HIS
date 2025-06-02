@@ -1,0 +1,50 @@
+.landing-section {
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  transition: opacity 1s ease-in-out; /* تأثير الانسياب */
+  z-index: 1;
+}
+.landing-section.curved {
+  clip-path: ellipse(100% 85% at 50% 0);
+}
+
+.fade-in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.landing-curve-text {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #5f0421cd;
+  z-index: 10;
+  text-shadow: 0 0 5px rgba(255,255,255,0.7);
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none; /* يمنع التفاعل مع العناصر لما تختفي */
+}
+
+.overlay {
+  background-color: rgba(185, 51, 93, 0.4); /* الشفافية للطبقة */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-title {
+  font-size: 3rem;
+  color: white;
+  font-weight: bold;
+}
